@@ -1,4 +1,4 @@
-<img align="left" height="100" style="margin-right: 10px;" src="./img/icon.png">
+<img align="left" height="100" style="margin-right: 10px;" src="../img/icon.png">
 
 # IDkollen Rust Client
 
@@ -13,12 +13,18 @@
 [downloads-url]: https://crates.io/crates/idkollen-client
 [docs-image]: https://img.shields.io/docsrs/idkollen-client?style=flat-square
 [docs-url]: https://docs.rs/idkollen-client
-[license-image]: https://img.shields.io/github/license/idkollen/idk-clients?style=flat-square
-[license-url]: https://github.com/idkollen/idk-clients/blob/master/LICENSE
+[license-image]: https://img.shields.io/badge/license-MIT-blue?style=flat-square
+[license-url]: https://opensource.org/license/mit
 
 API client for the [IDkollen](https://developers.idkollen.se) REST API.
 
-## Features
+## Installation
+
+```sh
+cargo add idkollen-client
+```
+
+### Features
 
 * **`async`** (default) — async/await via `tokio`
 * **`blocking`** - synchronous API via `reqwest::blocking`
@@ -83,8 +89,6 @@ $ cargo clippy --all-features
 ```
 
 ##### Unit/Integration/Doc Testing 
-
-All code that goes into main must pass all tests. To run all tests, use:
 
 ```sh
 $ cargo test --all-features

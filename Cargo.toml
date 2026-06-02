@@ -1,0 +1,28 @@
+[package]
+name = "idkollen-client"
+version = "0.1.0"
+edition = "2024"
+description = "API client for the IDkollen REST API"
+license = "MIT"
+readme = "README.md"
+homepage = "https://developers.idkollen.se"
+documentation = "https://docs.rs/idkollen-client"
+keywords = ["bankid", "eid", "identity", "authentication"]
+categories = ["authentication", "web-programming::http-client", "api-bindings"]
+rust-version = "1.87"
+
+[features]
+default = ["async"]
+async = ["dep:tokio"]
+blocking = ["reqwest/blocking"]
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+email_address = "0.2"
+reqwest = { version = "0.13", features = ["json", "multipart"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_path_to_error = "0.1"
+thiserror = "2"
+tokio = { version = "1", features = ["time", "macros"], optional = true }
+url = "2"

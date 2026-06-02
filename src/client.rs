@@ -510,28 +510,3 @@ fn parse_blocking_response<T: DeserializeOwned>(
         Err(IdkollenError::Api { status, message })
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::models::{BankIdSePhoneAuthRequest, CallInitiator, Pno};
-
-    #[tokio::test]
-    async fn test() {
-        let client = IdkollenClientBuilder::new("494c2afa-fb68-4891-9b3b-8a0056771707", "123456")
-            .environment(Environment::Staging)
-            .build()
-            .unwrap();
-
-        let response = client
-            .bankid_se()
-            .phone_auth(BankIdSePhoneAuthRequest::new(
-                Pno::parse("9012073731").unwrap(),
-                CallInitiator::User,
-            ))
-            .await
-            .unwrap();
-
-        println!("{:#?}", response);
-    }
-}

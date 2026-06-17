@@ -20,13 +20,13 @@ impl DocumentEndpoint<'_> {
             .mime_str(content_type)?;
         let form = reqwest::multipart::Form::new().part("file", part);
 
-        self.0.post_multipart("/document", form).await
+        self.0.post_multipart("/v3/document", form).await
     }
 
     /// Download a signed PDF by document ID. Returns raw PDF bytes.
     pub async fn download(&self, document_id: &str) -> Result<Vec<u8>, IdkollenError> {
         self.0
-            .get_bytes(&format!("/document/{}", document_id))
+            .get_bytes(&format!("/v3/document/{}", document_id))
             .await
     }
 }
@@ -52,11 +52,11 @@ impl DocumentBlockingEndpoint<'_> {
             .mime_str(content_type)?;
         let form = reqwest::blocking::multipart::Form::new().part("file", part);
 
-        self.0.post_multipart("/document", form)
+        self.0.post_multipart("/v3/document", form)
     }
 
     /// Download a signed PDF by document ID. Returns raw PDF bytes.
     pub fn download(&self, document_id: &str) -> Result<Vec<u8>, IdkollenError> {
-        self.0.get_bytes(&format!("/document/{}", document_id))
+        self.0.get_bytes(&format!("/v3/document/{}", document_id))
     }
 }

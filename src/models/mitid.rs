@@ -184,7 +184,7 @@ pub struct MitIdCompleted {
     pub id: String,
     pub ref_id: Option<String>,
     /// Danish CPR number.
-    pub ssn: Cpr,
+    pub ssn: Option<Cpr>,
     pub name: String,
     pub given_name: String,
     pub surname: String,

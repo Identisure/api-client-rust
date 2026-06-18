@@ -135,14 +135,6 @@ pub struct BankIdNoSignRequest {
     /// Document IDs to sign (from `/v3/document`). Mutually exclusive with `text`.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub documents: Option<Vec<String>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub request_ssn: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub request_phone: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub request_email: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub request_address: Option<bool>,
     /// Reference ID returned verbatim in the result and callback.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ref_id: Option<String>,
@@ -169,30 +161,6 @@ impl BankIdNoSignRequest {
     #[inline]
     pub fn documents(mut self, v: Vec<String>) -> Self {
         self.documents = Some(v);
-        self
-    }
-
-    #[inline]
-    pub fn request_ssn(mut self, v: bool) -> Self {
-        self.request_ssn = Some(v);
-        self
-    }
-
-    #[inline]
-    pub fn request_phone(mut self, v: bool) -> Self {
-        self.request_phone = Some(v);
-        self
-    }
-
-    #[inline]
-    pub fn request_email(mut self, v: bool) -> Self {
-        self.request_email = Some(v);
-        self
-    }
-
-    #[inline]
-    pub fn request_address(mut self, v: bool) -> Self {
-        self.request_address = Some(v);
         self
     }
 

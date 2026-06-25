@@ -129,7 +129,8 @@ impl IdkollenClientBuilder {
     #[inline]
     #[must_use]
     pub fn base_url(mut self, url: impl Into<String>) -> Self {
-        self.base_url = Some(url.into());
+        let url: String = url.into();
+        self.base_url = Some(url.trim_end_matches('/').to_owned());
         self
     }
 

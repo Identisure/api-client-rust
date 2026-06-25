@@ -10,7 +10,9 @@ use thiserror::Error;
 /// Accepts 10-digit (`YYMMDDXXXX`), 10-digit with separator (`YYMMDD-XXXX`,
 /// `YYMMDD+XXXX`), 12-digit (`YYYYMMDDXXXX`), or 12-digit with separator
 /// (`YYYYMMDD-XXXX`). Strips separators and validates the Luhn check digit.
-/// Stored without separators; serializes/deserializes as a plain JSON string.
+/// Stored without separators, except that the 10-digit `+` form keeps its `+`
+/// since it marks someone aged 100 or more; serializes/deserializes as a plain
+/// JSON string.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Pno(String);
 
@@ -41,6 +43,10 @@ impl Pno {
 
         if !luhn10(&ten) {
             return Err(PnoError("Luhn check failed".to_owned()));
+        }
+
+        if cleaned.len() == 10 && s.contains('+') {
+            return Ok(Self(format!("{}+{}", &cleaned[..6], &cleaned[6..])));
         }
 
         Ok(Self(cleaned))
@@ -253,9 +259,11 @@ impl<'de> Deserialize<'de> for Cpr {
 
 /// A validated Finnish personal identity code (henkilötunnus, HETU).
 ///
-/// Format: `DDMMYYcXXXK` where `c` is the century marker (`-` = 1900s,
-/// `+` = 1800s, `A` = 2000s), `XXX` is an individual number, and `K` is
-/// a check character from the alphabet `0123456789ABCDEFHJKLMNPRSTUVWXY`.
+/// Format: `DDMMYYcXXXK` where `c` is the century marker (`+` = 1800s,
+/// `-`, `Y`, `X`, `W`, `V`, `U` = 1900s, `A`, `B`, `C`, `D`, `E`, `F` = 2000s;
+/// the extra markers exist since 2023-01-01), `XXX` is an individual number,
+/// and `K` is a check character from the alphabet
+/// `0123456789ABCDEFHJKLMNPRSTUVWXY`.
 /// Stored in the original 11-character form.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Hetu(String);
@@ -268,6 +276,10 @@ const HETU_ALPHABET: &[u8] = b"0123456789ABCDEFHJKLMNPRSTUVWXY";
 
 impl Hetu {
     pub fn parse(s: &str) -> Result<Self, HetuError> {
+        if !s.is_ascii() {
+            return Err(HetuError("contains non-ASCII characters".to_owned()));
+        }
+
         let upper = s.to_ascii_uppercase();
         let b = upper.as_bytes();
 
@@ -280,9 +292,12 @@ impl Hetu {
 
         let sep = b[6] as char;
 
-        if sep != '-' && sep != '+' && sep != 'A' {
+        if !matches!(
+            sep,
+            '+' | '-' | 'Y' | 'X' | 'W' | 'V' | 'U' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+        ) {
             return Err(HetuError(format!(
-                "invalid century marker '{sep}'; expected '-', '+', or 'A'"
+                "invalid century marker '{sep}'; expected one of '+-YXWVUABCDEF'"
             )));
         }
 

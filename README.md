@@ -37,8 +37,8 @@ idkollen-client = { version = "0.1", features = ["async"] }
 ```
 
 ```rust
-use idkollen_client::{IdkollenClientBuilder, Environment};
-use idkollen_client::models::{BankIdSeAuthRequest, PollOptions};
+use idkollen_client::models::{BankIdSeAuthRequest, BankIdSeStatus};
+use idkollen_client::{Environment, IdkollenClientBuilder, PollOptions};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -46,14 +46,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .environment(Environment::Staging)
         .build()?;
 
-    let session = client
-        .bankid_se()
-        .auth(BankIdSeAuthRequest::new())
-        .await?;
+    let BankIdSeStatus::Pending(session) =
+        client.bankid_se().auth(BankIdSeAuthRequest::new()).await?
+    else {
+        return Err("Expected a pending session".into());
+    };
 
     let result = client
         .bankid_se()
-        .wait_for_auth(&session.id(), PollOptions::default())
+        .wait_for_auth(&session.id, PollOptions::default())
         .await?;
 
     println!("{result:#?}");

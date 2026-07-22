@@ -1,4 +1,4 @@
-use chrono::NaiveDate;
+use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 
 use super::common::ApiErrorCode;
@@ -222,6 +222,10 @@ pub struct BankIdNoCompleted {
     pub sign_result: Option<BankIdNoSignResult>,
     /// Present when documents were signed.
     pub signed_documents: Option<Vec<BankIdNoSignedDocument>>,
+    /// When the user authenticated.
+    pub authenticated_at: Option<DateTime<Utc>>,
+    /// When the user signed. Present only for signing sessions.
+    pub signed_at: Option<DateTime<Utc>>,
 }
 
 /// Returned when the BankID NO session has failed.

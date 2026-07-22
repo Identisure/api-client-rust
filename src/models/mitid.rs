@@ -1,4 +1,4 @@
-use chrono::NaiveDate;
+use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 
 use super::common::ApiErrorCode;
@@ -157,6 +157,7 @@ impl MitIdSignRequest {
 #[non_exhaustive]
 #[derive(Debug, Clone, Deserialize)]
 #[serde(tag = "status")]
+#[expect(clippy::large_enum_variant)]
 pub enum MitIdStatus {
     #[serde(rename = "PENDING")]
     Pending(MitIdPending),
@@ -196,6 +197,10 @@ pub struct MitIdCompleted {
     pub bank_id: Option<String>,
     /// Present when the session was a signing session.
     pub sign_result: Option<MitIdSignResult>,
+    /// When the user authenticated.
+    pub authenticated_at: Option<DateTime<Utc>>,
+    /// When the user signed. Present only for signing sessions.
+    pub signed_at: Option<DateTime<Utc>>,
 }
 
 /// Returned when the MitID session has failed.

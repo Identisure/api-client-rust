@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 use super::common::{ApiErrorCode, Country};
@@ -352,6 +353,10 @@ pub struct FrejaCompleted {
     pub address: Option<String>,
     /// Present only when `org_number` was provided.
     pub company_signatory_text: Option<String>,
+    /// When the user authenticated.
+    pub authenticated_at: Option<DateTime<Utc>>,
+    /// When the user signed. Present only for signing sessions.
+    pub signed_at: Option<DateTime<Utc>>,
 }
 
 /// Returned when the Freja eID session has failed.

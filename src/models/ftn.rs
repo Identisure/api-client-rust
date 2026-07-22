@@ -1,4 +1,4 @@
-use chrono::NaiveDate;
+use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 
 use super::common::ApiErrorCode;
@@ -69,6 +69,7 @@ impl FtnAuthRequest {
 #[non_exhaustive]
 #[derive(Debug, Clone, Deserialize)]
 #[serde(tag = "status")]
+#[expect(clippy::large_enum_variant)]
 pub enum FtnStatus {
     #[serde(rename = "PENDING")]
     Pending(FtnPending),
@@ -105,6 +106,9 @@ pub struct FtnCompleted {
     pub birth_date: Option<NaiveDate>,
     pub pid: Option<String>,
     pub bank_id: Option<String>,
+    pub bank_name: Option<String>,
+    /// When the user authenticated.
+    pub authenticated_at: Option<DateTime<Utc>>,
 }
 
 /// Returned when the FTN session has failed.

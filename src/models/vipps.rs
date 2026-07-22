@@ -1,4 +1,4 @@
-use chrono::NaiveDate;
+use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 
 use super::common::ApiErrorCode;
@@ -155,6 +155,7 @@ impl VippsBackchannelAuthRequest {
 #[non_exhaustive]
 #[derive(Debug, Clone, Deserialize)]
 #[serde(tag = "status")]
+#[expect(clippy::large_enum_variant)]
 pub enum VippsStatus {
     #[serde(rename = "PENDING")]
     Pending(VippsPending),
@@ -191,6 +192,8 @@ pub struct VippsCompleted {
     pub birth_date: Option<NaiveDate>,
     pub pid: Option<String>,
     pub bank_id: Option<String>,
+    /// When the user authenticated.
+    pub authenticated_at: Option<DateTime<Utc>>,
 }
 
 /// Returned when the Vipps session has failed.

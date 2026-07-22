@@ -1,4 +1,4 @@
-use chrono::NaiveDate;
+use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 
 use super::common::{ApiErrorCode, CallInitiator};
@@ -411,6 +411,10 @@ pub struct BankIdSeCompleted {
     pub address: Option<String>,
     /// Company signatory result text. Present only when `org_number` was provided.
     pub company_signatory_text: Option<String>,
+    /// When the user authenticated.
+    pub authenticated_at: Option<DateTime<Utc>>,
+    /// When the user signed. Present only for signing sessions.
+    pub signed_at: Option<DateTime<Utc>>,
 }
 
 /// Returned when the BankID session has failed.

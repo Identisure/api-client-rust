@@ -407,6 +407,15 @@ pub struct BankIdSeCompleted {
     pub surname: String,
     /// Date the BankID certificate became valid (YYYY-MM-DD).
     pub cert_start_date: Option<NaiveDate>,
+    /// Base64-encoded OCSP response proving the certificate was valid at the time of the order.
+    pub ocsp_response: String,
+    /// BankID's risk indication (`low`, `moderate` or `high`). Present only when `ip_address`
+    /// was provided and BankID could calculate it.
+    pub risk: Option<String>,
+    /// The user's device, as seen by BankID.
+    pub device: Option<BankIdSeDevice>,
+    /// Additional verifications performed before the order completed.
+    pub step_up: Option<BankIdSeStepUp>,
     /// Present only when `request_address` was `true`.
     pub address: Option<String>,
     /// Company signatory result text. Present only when `org_number` was provided.
@@ -415,6 +424,26 @@ pub struct BankIdSeCompleted {
     pub authenticated_at: Option<DateTime<Utc>>,
     /// When the user signed. Present only for signing sessions.
     pub signed_at: Option<DateTime<Utc>>,
+}
+
+/// The user's device, as seen by BankID.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BankIdSeDevice {
+    /// IP address of the user agent as the BankID server sees it.
+    pub ip_address: Option<String>,
+    /// Unique hardware identifier for the user's device.
+    pub uhi: Option<String>,
+}
+
+/// Additional verifications performed before a BankID order completed.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BankIdSeStepUp {
+    /// Whether an MRTD (machine readable travel document) check was performed.
+    pub mrtd: Option<bool>,
+    /// Whether the order was stepped up with facial recognition.
+    pub face: Option<bool>,
 }
 
 /// Returned when the BankID session has failed.

@@ -163,6 +163,9 @@ pub enum VippsStatus {
     Completed(VippsCompleted),
     #[serde(rename = "FAILED")]
     Failed(VippsFailed),
+    /// A status this client version does not recognize.
+    #[serde(other)]
+    Unknown,
 }
 
 /// Returned while the user has not yet acted.

@@ -76,6 +76,9 @@ pub enum AgeVerificationStatus {
     Completed(AgeVerificationCompleted),
     #[serde(rename = "FAILED")]
     Failed(AgeVerificationFailed),
+    /// A status this client version does not recognize.
+    #[serde(other)]
+    Unknown,
 }
 
 /// Returned while the user has not yet completed age verification.

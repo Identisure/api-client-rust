@@ -183,6 +183,9 @@ pub enum BankIdNoStatus {
     Completed(BankIdNoCompleted),
     #[serde(rename = "FAILED")]
     Failed(BankIdNoFailed),
+    /// A status this client version does not recognize.
+    #[serde(other)]
+    Unknown,
 }
 
 /// Returned while the user has not yet acted.

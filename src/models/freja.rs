@@ -323,6 +323,9 @@ pub enum FrejaStatus {
     Completed(FrejaCompleted),
     #[serde(rename = "FAILED")]
     Failed(FrejaFailed),
+    /// A status this client version does not recognize.
+    #[serde(other)]
+    Unknown,
 }
 
 /// Returned while the user has not yet acted in the Freja app.

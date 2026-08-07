@@ -372,6 +372,9 @@ pub enum BankIdSeStatus {
     Completed(BankIdSeCompleted),
     #[serde(rename = "FAILED")]
     Failed(BankIdSeFailed),
+    /// A status this client version does not recognize.
+    #[serde(other)]
+    Unknown,
 }
 
 /// Returned while the user has not yet acted in the BankID app.
@@ -469,4 +472,17 @@ pub struct BankIdSeVerifyResponse {
     pub age: Option<u8>,
     /// Date the QR code was verified (YYYY-MM-DD, UTC).
     pub verified_at: Option<NaiveDate>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn unrecognized_status_decodes_as_unknown() {
+        let status: BankIdSeStatus =
+            serde_json::from_str(r#"{"status":"SOMETHING_NEW","id":"abc"}"#).unwrap();
+
+        assert!(matches!(status, BankIdSeStatus::Unknown));
+    }
 }

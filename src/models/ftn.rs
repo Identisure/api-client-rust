@@ -77,6 +77,9 @@ pub enum FtnStatus {
     Completed(FtnCompleted),
     #[serde(rename = "FAILED")]
     Failed(FtnFailed),
+    /// A status this client version does not recognize.
+    #[serde(other)]
+    Unknown,
 }
 
 /// Returned while the user has not yet acted.

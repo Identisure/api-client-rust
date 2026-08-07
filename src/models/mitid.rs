@@ -165,6 +165,9 @@ pub enum MitIdStatus {
     Completed(MitIdCompleted),
     #[serde(rename = "FAILED")]
     Failed(MitIdFailed),
+    /// A status this client version does not recognize.
+    #[serde(other)]
+    Unknown,
 }
 
 /// Returned while the user has not yet acted.

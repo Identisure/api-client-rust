@@ -62,6 +62,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
+### Verifying callbacks
+
+```rust
+let valid = idkollen_client::verify_callback_signature(&raw_body, signature_header, hmac_secret);
+```
+
 ## Development
 
 #### Prerequisites

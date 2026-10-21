@@ -739,7 +739,7 @@ mod async_client {
         };
 
         assert_eq!(status, 400);
-        assert!(message.contains(str_at(&fx, "message")), "got {message}");
+        assert_eq!(message, str_at(&fx, "message"));
     }
 }
 

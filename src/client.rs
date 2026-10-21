@@ -1,6 +1,6 @@
 use reqwest::Method;
 use reqwest::header::USER_AGENT;
-use serde::{Serialize, de::DeserializeOwned};
+use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use std::time::Duration;
 use thiserror::Error;
 
@@ -295,7 +295,7 @@ impl IdkollenClient {
             Ok(())
         } else {
             let status = resp.status().as_u16();
-            let message = resp.text().await.unwrap_or_default();
+            let message = api_error_message(resp.text().await.unwrap_or_default());
 
             Err(IdkollenError::Api { status, message })
         }
@@ -322,7 +322,7 @@ impl IdkollenClient {
             Ok(resp.bytes().await?.to_vec())
         } else {
             let status = resp.status().as_u16();
-            let message = resp.text().await.unwrap_or_default();
+            let message = api_error_message(resp.text().await.unwrap_or_default());
 
             Err(IdkollenError::Api { status, message })
         }
@@ -338,7 +338,7 @@ async fn parse_response<T: DeserializeOwned>(resp: reqwest::Response) -> Result<
         Ok(serde_path_to_error::deserialize(deserializer)?)
     } else {
         let status = resp.status().as_u16();
-        let message = resp.text().await.unwrap_or_default();
+        let message = api_error_message(resp.text().await.unwrap_or_default());
 
         Err(IdkollenError::Api { status, message })
     }
@@ -429,7 +429,7 @@ impl IdkollenBlockingClient {
             Ok(())
         } else {
             let status = resp.status().as_u16();
-            let message = resp.text().unwrap_or_default();
+            let message = api_error_message(resp.text().unwrap_or_default());
 
             Err(IdkollenError::Api { status, message })
         }
@@ -452,7 +452,7 @@ impl IdkollenBlockingClient {
             Ok(resp.bytes()?.to_vec())
         } else {
             let status = resp.status().as_u16();
-            let message = resp.text().unwrap_or_default();
+            let message = api_error_message(resp.text().unwrap_or_default());
 
             Err(IdkollenError::Api { status, message })
         }
@@ -470,7 +470,7 @@ fn parse_blocking_response<T: DeserializeOwned>(
         Ok(serde_path_to_error::deserialize(deserializer)?)
     } else {
         let status = resp.status().as_u16();
-        let message = resp.text().unwrap_or_default();
+        let message = api_error_message(resp.text().unwrap_or_default());
 
         Err(IdkollenError::Api { status, message })
     }
@@ -501,4 +501,13 @@ mod tests {
 
         assert!(matches!(result, Err(IdkollenError::Http(e)) if e.is_timeout()));
     }
+}
+
+fn api_error_message(body: String) -> String {
+    #[derive(Deserialize)]
+    struct ErrorBody {
+        message: String,
+    }
+
+    serde_json::from_str::<ErrorBody>(&body).map_or(body, |e| e.message)
 }

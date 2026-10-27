@@ -1,19 +1,19 @@
-use crate::client::{IdkollenError, PollOptions, WaitError};
+use crate::client::{IdentisureError, PollOptions, WaitError};
 use crate::models::{AgeVerificationRequest, AgeVerificationStatus};
 use crate::models::{MitIdAuthRequest, MitIdBackchannelAuthRequest, MitIdSignRequest, MitIdStatus};
 use std::time::Instant;
 
 #[cfg(feature = "async")]
-use crate::client::IdkollenClient;
+use crate::client::IdentisureClient;
 
 #[cfg(feature = "async")]
 /// MitID operations.
-pub struct MitIdEndpoint<'a>(pub(crate) &'a IdkollenClient);
+pub struct MitIdEndpoint<'a>(pub(crate) &'a IdentisureClient);
 
 #[cfg(feature = "async")]
 impl MitIdEndpoint<'_> {
     /// Start a MitID authentication session.
-    pub async fn auth(&self, req: MitIdAuthRequest) -> Result<MitIdStatus, IdkollenError> {
+    pub async fn auth(&self, req: MitIdAuthRequest) -> Result<MitIdStatus, IdentisureError> {
         self.0.post("/v3/mitid/auth", &req).await
     }
 
@@ -21,12 +21,12 @@ impl MitIdEndpoint<'_> {
     pub async fn backchannel_auth(
         &self,
         req: MitIdBackchannelAuthRequest,
-    ) -> Result<MitIdStatus, IdkollenError> {
+    ) -> Result<MitIdStatus, IdentisureError> {
         self.0.post("/v3/mitid/backchannel/auth", &req).await
     }
 
     /// Start a MitID signing session.
-    pub async fn sign(&self, req: MitIdSignRequest) -> Result<MitIdStatus, IdkollenError> {
+    pub async fn sign(&self, req: MitIdSignRequest) -> Result<MitIdStatus, IdentisureError> {
         self.0.post("/v3/mitid/sign", &req).await
     }
 
@@ -34,17 +34,17 @@ impl MitIdEndpoint<'_> {
     pub async fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/mitid/age-verification", &req).await
     }
 
     /// Poll the current status of a MitID authentication session.
-    pub async fn auth_status(&self, id: &str) -> Result<MitIdStatus, IdkollenError> {
+    pub async fn auth_status(&self, id: &str) -> Result<MitIdStatus, IdentisureError> {
         self.0.get(&format!("/v3/mitid/auth/{}", id)).await
     }
 
     /// Poll the current status of a MitID signing session.
-    pub async fn sign_status(&self, id: &str) -> Result<MitIdStatus, IdkollenError> {
+    pub async fn sign_status(&self, id: &str) -> Result<MitIdStatus, IdentisureError> {
         self.0.get(&format!("/v3/mitid/sign/{}", id)).await
     }
 
@@ -52,24 +52,24 @@ impl MitIdEndpoint<'_> {
     pub async fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0
             .get(&format!("/v3/mitid/age-verification/{}", id))
             .await
     }
 
     /// Cancel a MitID authentication session.
-    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/mitid/auth/{}", id)).await
     }
 
     /// Cancel a MitID signing session.
-    pub async fn cancel_sign(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_sign(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/mitid/sign/{}", id)).await
     }
 
     /// Cancel a MitID age verification session.
-    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0
             .delete(&format!("/v3/mitid/age-verification/{}", id))
             .await
@@ -143,16 +143,16 @@ impl MitIdEndpoint<'_> {
 }
 
 #[cfg(feature = "blocking")]
-use crate::client::IdkollenBlockingClient;
+use crate::client::IdentisureBlockingClient;
 
 #[cfg(feature = "blocking")]
 /// MitID operations (blocking).
-pub struct MitIdBlockingEndpoint<'a>(pub(crate) &'a IdkollenBlockingClient);
+pub struct MitIdBlockingEndpoint<'a>(pub(crate) &'a IdentisureBlockingClient);
 
 #[cfg(feature = "blocking")]
 impl MitIdBlockingEndpoint<'_> {
     /// Start a MitID authentication session.
-    pub fn auth(&self, req: MitIdAuthRequest) -> Result<MitIdStatus, IdkollenError> {
+    pub fn auth(&self, req: MitIdAuthRequest) -> Result<MitIdStatus, IdentisureError> {
         self.0.post("/v3/mitid/auth", &req)
     }
 
@@ -160,12 +160,12 @@ impl MitIdBlockingEndpoint<'_> {
     pub fn backchannel_auth(
         &self,
         req: MitIdBackchannelAuthRequest,
-    ) -> Result<MitIdStatus, IdkollenError> {
+    ) -> Result<MitIdStatus, IdentisureError> {
         self.0.post("/v3/mitid/backchannel/auth", &req)
     }
 
     /// Start a MitID signing session.
-    pub fn sign(&self, req: MitIdSignRequest) -> Result<MitIdStatus, IdkollenError> {
+    pub fn sign(&self, req: MitIdSignRequest) -> Result<MitIdStatus, IdentisureError> {
         self.0.post("/v3/mitid/sign", &req)
     }
 
@@ -173,17 +173,17 @@ impl MitIdBlockingEndpoint<'_> {
     pub fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/mitid/age-verification", &req)
     }
 
     /// Poll the current status of a MitID authentication session.
-    pub fn auth_status(&self, id: &str) -> Result<MitIdStatus, IdkollenError> {
+    pub fn auth_status(&self, id: &str) -> Result<MitIdStatus, IdentisureError> {
         self.0.get(&format!("/v3/mitid/auth/{}", id))
     }
 
     /// Poll the current status of a MitID signing session.
-    pub fn sign_status(&self, id: &str) -> Result<MitIdStatus, IdkollenError> {
+    pub fn sign_status(&self, id: &str) -> Result<MitIdStatus, IdentisureError> {
         self.0.get(&format!("/v3/mitid/sign/{}", id))
     }
 
@@ -191,22 +191,22 @@ impl MitIdBlockingEndpoint<'_> {
     pub fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.get(&format!("/v3/mitid/age-verification/{}", id))
     }
 
     /// Cancel a MitID authentication session.
-    pub fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/mitid/auth/{}", id))
     }
 
     /// Cancel a MitID signing session.
-    pub fn cancel_sign(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_sign(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/mitid/sign/{}", id))
     }
 
     /// Cancel a MitID age verification session.
-    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/mitid/age-verification/{}", id))
     }
 

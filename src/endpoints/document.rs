@@ -1,10 +1,10 @@
 use crate::models::DocumentUploadResponse;
 
 #[cfg(feature = "async")]
-use crate::client::IdkollenClient;
+use crate::client::IdentisureClient;
 
 #[cfg(feature = "async")]
-pub struct DocumentEndpoint<'a>(pub(crate) &'a IdkollenClient);
+pub struct DocumentEndpoint<'a>(pub(crate) &'a IdentisureClient);
 
 #[cfg(feature = "async")]
 impl DocumentEndpoint<'_> {
@@ -14,7 +14,7 @@ impl DocumentEndpoint<'_> {
         data: Vec<u8>,
         filename: &str,
         content_type: &str,
-    ) -> Result<DocumentUploadResponse, IdkollenError> {
+    ) -> Result<DocumentUploadResponse, IdentisureError> {
         let part = reqwest::multipart::Part::bytes(data)
             .file_name(filename.to_owned())
             .mime_str(content_type)?;
@@ -24,19 +24,19 @@ impl DocumentEndpoint<'_> {
     }
 
     /// Download a signed PDF by document ID. Returns raw PDF bytes.
-    pub async fn download(&self, document_id: &str) -> Result<Vec<u8>, IdkollenError> {
+    pub async fn download(&self, document_id: &str) -> Result<Vec<u8>, IdentisureError> {
         self.0
             .get_bytes(&format!("/v3/document/{}", document_id))
             .await
     }
 }
 
-use crate::IdkollenError;
+use crate::IdentisureError;
 #[cfg(feature = "blocking")]
-use crate::client::IdkollenBlockingClient;
+use crate::client::IdentisureBlockingClient;
 
 #[cfg(feature = "blocking")]
-pub struct DocumentBlockingEndpoint<'a>(pub(crate) &'a IdkollenBlockingClient);
+pub struct DocumentBlockingEndpoint<'a>(pub(crate) &'a IdentisureBlockingClient);
 
 #[cfg(feature = "blocking")]
 impl DocumentBlockingEndpoint<'_> {
@@ -46,7 +46,7 @@ impl DocumentBlockingEndpoint<'_> {
         data: Vec<u8>,
         filename: &str,
         content_type: &str,
-    ) -> Result<DocumentUploadResponse, IdkollenError> {
+    ) -> Result<DocumentUploadResponse, IdentisureError> {
         let part = reqwest::blocking::multipart::Part::bytes(data)
             .file_name(filename.to_owned())
             .mime_str(content_type)?;
@@ -56,7 +56,7 @@ impl DocumentBlockingEndpoint<'_> {
     }
 
     /// Download a signed PDF by document ID. Returns raw PDF bytes.
-    pub fn download(&self, document_id: &str) -> Result<Vec<u8>, IdkollenError> {
+    pub fn download(&self, document_id: &str) -> Result<Vec<u8>, IdentisureError> {
         self.0.get_bytes(&format!("/v3/document/{}", document_id))
     }
 }

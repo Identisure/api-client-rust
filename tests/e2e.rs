@@ -36,12 +36,12 @@ impl Flow {
 mod async_client {
     use super::Flow;
     use crate::support::{self, MockServer, date, fixture_json, instant, poll, str_at};
-    use idkollen_client::models::*;
-    use idkollen_client::{IdkollenClient, IdkollenClientBuilder, IdkollenError};
+    use identisure_client::models::*;
+    use identisure_client::{IdentisureClient, IdentisureClientBuilder, IdentisureError};
     use serde_json::Value;
 
-    fn client(server: &MockServer) -> IdkollenClient {
-        IdkollenClientBuilder::new(support::CLIENT_ID, support::CLIENT_SECRET)
+    fn client(server: &MockServer) -> IdentisureClient {
+        IdentisureClientBuilder::new(support::CLIENT_ID, support::CLIENT_SECRET)
             .base_url(server.url())
             .build()
             .unwrap()
@@ -734,7 +734,7 @@ mod async_client {
         let server = MockServer::start(&[(400, "error.json")]);
         let client = client(&server);
         let result = client.ftn().auth(FtnAuthRequest::new()).await;
-        let Err(IdkollenError::Api { status, message }) = result else {
+        let Err(IdentisureError::Api { status, message }) = result else {
             panic!("expected Api error, got {result:?}");
         };
 
@@ -747,8 +747,8 @@ mod async_client {
 mod blocking_client {
     use super::Flow;
     use crate::support::{self, fixture_json, instant, poll, str_at};
-    use idkollen_client::IdkollenClientBuilder;
-    use idkollen_client::models::*;
+    use identisure_client::IdentisureClientBuilder;
+    use identisure_client::models::*;
 
     #[test]
     fn ftn_auth_completed() {
@@ -759,7 +759,7 @@ mod blocking_client {
             "ftn/auth_pending.json",
             "ftn/auth_completed.json",
         );
-        let client = IdkollenClientBuilder::new(support::CLIENT_ID, support::CLIENT_SECRET)
+        let client = IdentisureClientBuilder::new(support::CLIENT_ID, support::CLIENT_SECRET)
             .base_url(flow.server.url())
             .build_blocking()
             .unwrap();

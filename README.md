@@ -1,27 +1,27 @@
 <img align="left" height="100" style="margin-right: 10px;" src="../img/icon.png">
 
-# IDkollen Rust Client
+# Identisure Rust Client
 
 [![Crate][crate-image]][crate-url]
 [![Downloads][downloads-image]][downloads-url]
 [![Documentation][docs-image]][docs-url]
 [![MIT license][license-image]][license-url]
 
-[crate-image]: https://img.shields.io/crates/v/idkollen-client?style=flat-square
-[crate-url]: https://crates.io/crates/idkollen-client
-[downloads-image]: https://img.shields.io/crates/d/idkollen-client?style=flat-square
-[downloads-url]: https://crates.io/crates/idkollen-client
-[docs-image]: https://img.shields.io/docsrs/idkollen-client?style=flat-square
-[docs-url]: https://docs.rs/idkollen-client
+[crate-image]: https://img.shields.io/crates/v/identisure-client?style=flat-square
+[crate-url]: https://crates.io/crates/identisure-client
+[downloads-image]: https://img.shields.io/crates/d/identisure-client?style=flat-square
+[downloads-url]: https://crates.io/crates/identisure-client
+[docs-image]: https://img.shields.io/docsrs/identisure-client?style=flat-square
+[docs-url]: https://docs.rs/identisure-client
 [license-image]: https://img.shields.io/badge/license-MIT-blue?style=flat-square
 [license-url]: https://opensource.org/license/mit
 
-API client for the [IDkollen](https://developers.idkollen.se) REST API.
+API client for the [Identisure](https://developers.identisure.com) REST API.
 
 ## Installation
 
 ```sh
-cargo add idkollen-client
+cargo add identisure-client
 ```
 
 ### Features
@@ -33,16 +33,16 @@ cargo add idkollen-client
 
 ```toml
 [dependencies]
-idkollen-client = { version = "0.1", features = ["async"] }
+identisure-client = { version = "0.1", features = ["async"] }
 ```
 
 ```rust
-use idkollen_client::models::{BankIdSeAuthRequest, BankIdSeStatus};
-use idkollen_client::{Environment, IdkollenClientBuilder, PollOptions};
+use identisure_client::models::{BankIdSeAuthRequest, BankIdSeStatus};
+use identisure_client::{Environment, IdentisureClientBuilder, PollOptions};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = IdkollenClientBuilder::new("client_id", "client_secret")
+    let client = IdentisureClientBuilder::new("client_id", "client_secret")
         .environment(Environment::Staging)
         .build()?;
 
@@ -65,7 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ### Verifying callbacks
 
 ```rust
-let valid = idkollen_client::verify_callback_signature(&raw_body, signature_header, hmac_secret);
+let valid = identisure_client::verify_callback_signature(&raw_body, signature_header, hmac_secret);
 ```
 
 ## Development

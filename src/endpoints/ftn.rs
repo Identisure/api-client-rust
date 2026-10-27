@@ -1,19 +1,19 @@
-use crate::client::{IdkollenError, PollOptions, WaitError};
+use crate::client::{IdentisureError, PollOptions, WaitError};
 use crate::models::{AgeVerificationRequest, AgeVerificationStatus};
 use crate::models::{FtnAuthRequest, FtnStatus};
 use std::time::Instant;
 
 #[cfg(feature = "async")]
-use crate::client::IdkollenClient;
+use crate::client::IdentisureClient;
 
 #[cfg(feature = "async")]
 /// FTN operations.
-pub struct FtnEndpoint<'a>(pub(crate) &'a IdkollenClient);
+pub struct FtnEndpoint<'a>(pub(crate) &'a IdentisureClient);
 
 #[cfg(feature = "async")]
 impl FtnEndpoint<'_> {
     /// Start a FTN authentication session.
-    pub async fn auth(&self, req: FtnAuthRequest) -> Result<FtnStatus, IdkollenError> {
+    pub async fn auth(&self, req: FtnAuthRequest) -> Result<FtnStatus, IdentisureError> {
         self.0.post("/v3/ftn/auth", &req).await
     }
 
@@ -21,12 +21,12 @@ impl FtnEndpoint<'_> {
     pub async fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/ftn/age-verification", &req).await
     }
 
     /// Poll the current status of a FTN authentication session.
-    pub async fn auth_status(&self, id: &str) -> Result<FtnStatus, IdkollenError> {
+    pub async fn auth_status(&self, id: &str) -> Result<FtnStatus, IdentisureError> {
         self.0.get(&format!("/v3/ftn/auth/{}", id)).await
     }
 
@@ -34,19 +34,19 @@ impl FtnEndpoint<'_> {
     pub async fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0
             .get(&format!("/v3/ftn/age-verification/{}", id))
             .await
     }
 
     /// Cancel a FTN authentication session.
-    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/ftn/auth/{}", id)).await
     }
 
     /// Cancel a FTN age verification session.
-    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0
             .delete(&format!("/v3/ftn/age-verification/{}", id))
             .await
@@ -98,16 +98,16 @@ impl FtnEndpoint<'_> {
 }
 
 #[cfg(feature = "blocking")]
-use crate::client::IdkollenBlockingClient;
+use crate::client::IdentisureBlockingClient;
 
 #[cfg(feature = "blocking")]
 /// FTN operations (blocking).
-pub struct FtnBlockingEndpoint<'a>(pub(crate) &'a IdkollenBlockingClient);
+pub struct FtnBlockingEndpoint<'a>(pub(crate) &'a IdentisureBlockingClient);
 
 #[cfg(feature = "blocking")]
 impl FtnBlockingEndpoint<'_> {
     /// Start a FTN authentication session.
-    pub fn auth(&self, req: FtnAuthRequest) -> Result<FtnStatus, IdkollenError> {
+    pub fn auth(&self, req: FtnAuthRequest) -> Result<FtnStatus, IdentisureError> {
         self.0.post("/v3/ftn/auth", &req)
     }
 
@@ -115,12 +115,12 @@ impl FtnBlockingEndpoint<'_> {
     pub fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/ftn/age-verification", &req)
     }
 
     /// Poll the current status of a FTN authentication session.
-    pub fn auth_status(&self, id: &str) -> Result<FtnStatus, IdkollenError> {
+    pub fn auth_status(&self, id: &str) -> Result<FtnStatus, IdentisureError> {
         self.0.get(&format!("/v3/ftn/auth/{}", id))
     }
 
@@ -128,17 +128,17 @@ impl FtnBlockingEndpoint<'_> {
     pub fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.get(&format!("/v3/ftn/age-verification/{}", id))
     }
 
     /// Cancel a FTN authentication session.
-    pub fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/ftn/auth/{}", id))
     }
 
     /// Cancel a FTN age verification session.
-    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/ftn/age-verification/{}", id))
     }
 

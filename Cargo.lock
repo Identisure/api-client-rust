@@ -612,7 +612,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "idkollen-client"
+name = "identisure-client"
 version = "0.1.0"
 dependencies = [
  "base64 0.23.1",

@@ -1,4 +1,4 @@
-use crate::client::{IdkollenError, PollOptions, WaitError};
+use crate::client::{IdentisureError, PollOptions, WaitError};
 use crate::models::{AgeVerificationRequest, AgeVerificationStatus};
 use crate::models::{
     BankIdNoAuthRequest, BankIdNoBackchannelAuthRequest, BankIdNoSignRequest, BankIdNoStatus,
@@ -6,15 +6,15 @@ use crate::models::{
 use std::time::Instant;
 
 #[cfg(feature = "async")]
-use crate::client::IdkollenClient;
+use crate::client::IdentisureClient;
 
 #[cfg(feature = "async")]
-pub struct BankIdNoEndpoint<'a>(pub(crate) &'a IdkollenClient);
+pub struct BankIdNoEndpoint<'a>(pub(crate) &'a IdentisureClient);
 
 #[cfg(feature = "async")]
 impl BankIdNoEndpoint<'_> {
     /// Start a BankID NO authentication session.
-    pub async fn auth(&self, req: BankIdNoAuthRequest) -> Result<BankIdNoStatus, IdkollenError> {
+    pub async fn auth(&self, req: BankIdNoAuthRequest) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.post("/v3/bankid-no/auth", &req).await
     }
 
@@ -22,12 +22,12 @@ impl BankIdNoEndpoint<'_> {
     pub async fn backchannel_auth(
         &self,
         req: BankIdNoBackchannelAuthRequest,
-    ) -> Result<BankIdNoStatus, IdkollenError> {
+    ) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.post("/v3/bankid-no/backchannel/auth", &req).await
     }
 
     /// Start a BankID NO signing session.
-    pub async fn sign(&self, req: BankIdNoSignRequest) -> Result<BankIdNoStatus, IdkollenError> {
+    pub async fn sign(&self, req: BankIdNoSignRequest) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.post("/v3/bankid-no/sign", &req).await
     }
 
@@ -35,17 +35,17 @@ impl BankIdNoEndpoint<'_> {
     pub async fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/bankid-no/age-verification", &req).await
     }
 
     /// Poll the current status of a BankID NO authentication session.
-    pub async fn auth_status(&self, id: &str) -> Result<BankIdNoStatus, IdkollenError> {
+    pub async fn auth_status(&self, id: &str) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.get(&format!("/v3/bankid-no/auth/{}", id)).await
     }
 
     /// Poll the current status of a BankID NO signing session.
-    pub async fn sign_status(&self, id: &str) -> Result<BankIdNoStatus, IdkollenError> {
+    pub async fn sign_status(&self, id: &str) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.get(&format!("/v3/bankid-no/sign/{}", id)).await
     }
 
@@ -53,24 +53,24 @@ impl BankIdNoEndpoint<'_> {
     pub async fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0
             .get(&format!("/v3/bankid-no/age-verification/{}", id))
             .await
     }
 
     /// Cancel a BankID NO authentication session.
-    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/bankid-no/auth/{}", id)).await
     }
 
     /// Cancel a BankID NO signing session.
-    pub async fn cancel_sign(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_sign(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/bankid-no/sign/{}", id)).await
     }
 
     /// Cancel a BankID NO age verification session.
-    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0
             .delete(&format!("/v3/bankid-no/age-verification/{}", id))
             .await
@@ -150,15 +150,15 @@ impl BankIdNoEndpoint<'_> {
 }
 
 #[cfg(feature = "blocking")]
-use crate::client::IdkollenBlockingClient;
+use crate::client::IdentisureBlockingClient;
 
 #[cfg(feature = "blocking")]
-pub struct BankIdNoBlockingEndpoint<'a>(pub(crate) &'a IdkollenBlockingClient);
+pub struct BankIdNoBlockingEndpoint<'a>(pub(crate) &'a IdentisureBlockingClient);
 
 #[cfg(feature = "blocking")]
 impl BankIdNoBlockingEndpoint<'_> {
     /// Start a BankID NO authentication session.
-    pub fn auth(&self, req: BankIdNoAuthRequest) -> Result<BankIdNoStatus, IdkollenError> {
+    pub fn auth(&self, req: BankIdNoAuthRequest) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.post("/v3/bankid-no/auth", &req)
     }
 
@@ -166,12 +166,12 @@ impl BankIdNoBlockingEndpoint<'_> {
     pub fn backchannel_auth(
         &self,
         req: BankIdNoBackchannelAuthRequest,
-    ) -> Result<BankIdNoStatus, IdkollenError> {
+    ) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.post("/v3/bankid-no/backchannel/auth", &req)
     }
 
     /// Start a BankID NO signing session.
-    pub fn sign(&self, req: BankIdNoSignRequest) -> Result<BankIdNoStatus, IdkollenError> {
+    pub fn sign(&self, req: BankIdNoSignRequest) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.post("/v3/bankid-no/sign", &req)
     }
 
@@ -179,17 +179,17 @@ impl BankIdNoBlockingEndpoint<'_> {
     pub fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/bankid-no/age-verification", &req)
     }
 
     /// Poll the current status of a BankID NO authentication session.
-    pub fn auth_status(&self, id: &str) -> Result<BankIdNoStatus, IdkollenError> {
+    pub fn auth_status(&self, id: &str) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.get(&format!("/v3/bankid-no/auth/{}", id))
     }
 
     /// Poll the current status of a BankID NO signing session.
-    pub fn sign_status(&self, id: &str) -> Result<BankIdNoStatus, IdkollenError> {
+    pub fn sign_status(&self, id: &str) -> Result<BankIdNoStatus, IdentisureError> {
         self.0.get(&format!("/v3/bankid-no/sign/{}", id))
     }
 
@@ -197,23 +197,23 @@ impl BankIdNoBlockingEndpoint<'_> {
     pub fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0
             .get(&format!("/v3/bankid-no/age-verification/{}", id))
     }
 
     /// Cancel a BankID NO authentication session.
-    pub fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/bankid-no/auth/{}", id))
     }
 
     /// Cancel a BankID NO signing session.
-    pub fn cancel_sign(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_sign(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/bankid-no/sign/{}", id))
     }
 
     /// Cancel a BankID NO age verification session.
-    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0
             .delete(&format!("/v3/bankid-no/age-verification/{}", id))
     }

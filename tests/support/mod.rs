@@ -4,7 +4,7 @@
 use base64::Engine;
 use base64::engine::general_purpose::STANDARD;
 use chrono::{DateTime, NaiveDate, Utc};
-use idkollen_client::PollOptions;
+use identisure_client::PollOptions;
 use serde_json::Value;
 use std::collections::VecDeque;
 use std::io::{BufRead, BufReader, Read, Write};

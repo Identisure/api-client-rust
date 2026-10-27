@@ -1,4 +1,4 @@
-use crate::client::{IdkollenError, PollOptions, WaitError};
+use crate::client::{IdentisureError, PollOptions, WaitError};
 use crate::models::{AgeVerificationRequest, AgeVerificationStatus};
 use crate::models::{
     BankIdSeAuthRequest, BankIdSePhoneAuthRequest, BankIdSePhoneSignRequest, BankIdSeSignRequest,
@@ -7,15 +7,15 @@ use crate::models::{
 use std::time::Instant;
 
 #[cfg(feature = "async")]
-use crate::client::IdkollenClient;
+use crate::client::IdentisureClient;
 
 #[cfg(feature = "async")]
-pub struct BankIdSeEndpoint<'a>(pub(crate) &'a IdkollenClient);
+pub struct BankIdSeEndpoint<'a>(pub(crate) &'a IdentisureClient);
 
 #[cfg(feature = "async")]
 impl BankIdSeEndpoint<'_> {
     /// Start a BankID SE authentication session.
-    pub async fn auth(&self, req: BankIdSeAuthRequest) -> Result<BankIdSeStatus, IdkollenError> {
+    pub async fn auth(&self, req: BankIdSeAuthRequest) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/auth", &req).await
     }
 
@@ -23,12 +23,12 @@ impl BankIdSeEndpoint<'_> {
     pub async fn phone_auth(
         &self,
         req: BankIdSePhoneAuthRequest,
-    ) -> Result<BankIdSeStatus, IdkollenError> {
+    ) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/phone/auth", &req).await
     }
 
     /// Start a BankID SE signing session.
-    pub async fn sign(&self, req: BankIdSeSignRequest) -> Result<BankIdSeStatus, IdkollenError> {
+    pub async fn sign(&self, req: BankIdSeSignRequest) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/sign", &req).await
     }
 
@@ -36,7 +36,7 @@ impl BankIdSeEndpoint<'_> {
     pub async fn phone_sign(
         &self,
         req: BankIdSePhoneSignRequest,
-    ) -> Result<BankIdSeStatus, IdkollenError> {
+    ) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/phone/sign", &req).await
     }
 
@@ -44,7 +44,7 @@ impl BankIdSeEndpoint<'_> {
     pub async fn verify(
         &self,
         req: BankIdSeVerifyRequest,
-    ) -> Result<BankIdSeVerifyResponse, IdkollenError> {
+    ) -> Result<BankIdSeVerifyResponse, IdentisureError> {
         self.0.post("/v3/bankid-se/verify", &req).await
     }
 
@@ -52,17 +52,17 @@ impl BankIdSeEndpoint<'_> {
     pub async fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/age-verification", &req).await
     }
 
     /// Poll the current status of a BankID SE authentication session.
-    pub async fn auth_status(&self, id: &str) -> Result<BankIdSeStatus, IdkollenError> {
+    pub async fn auth_status(&self, id: &str) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.get(&format!("/v3/bankid-se/auth/{}", id)).await
     }
 
     /// Poll the current status of a BankID SE signing session.
-    pub async fn sign_status(&self, id: &str) -> Result<BankIdSeStatus, IdkollenError> {
+    pub async fn sign_status(&self, id: &str) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.get(&format!("/v3/bankid-se/sign/{}", id)).await
     }
 
@@ -70,24 +70,24 @@ impl BankIdSeEndpoint<'_> {
     pub async fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0
             .get(&format!("/v3/bankid-se/age-verification/{}", id))
             .await
     }
 
     /// Cancel a BankID SE authentication session.
-    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/bankid-se/auth/{}", id)).await
     }
 
     /// Cancel a BankID SE signing session.
-    pub async fn cancel_sign(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_sign(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/bankid-se/sign/{}", id)).await
     }
 
     /// Cancel a BankID SE age verification session.
-    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0
             .delete(&format!("/v3/bankid-se/age-verification/{}", id))
             .await
@@ -167,15 +167,15 @@ impl BankIdSeEndpoint<'_> {
 }
 
 #[cfg(feature = "blocking")]
-use crate::client::IdkollenBlockingClient;
+use crate::client::IdentisureBlockingClient;
 
 #[cfg(feature = "blocking")]
-pub struct BankIdSeBlockingEndpoint<'a>(pub(crate) &'a IdkollenBlockingClient);
+pub struct BankIdSeBlockingEndpoint<'a>(pub(crate) &'a IdentisureBlockingClient);
 
 #[cfg(feature = "blocking")]
 impl BankIdSeBlockingEndpoint<'_> {
     /// Start a BankID SE authentication session.
-    pub fn auth(&self, req: BankIdSeAuthRequest) -> Result<BankIdSeStatus, IdkollenError> {
+    pub fn auth(&self, req: BankIdSeAuthRequest) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/auth", &req)
     }
 
@@ -183,12 +183,12 @@ impl BankIdSeBlockingEndpoint<'_> {
     pub fn phone_auth(
         &self,
         req: BankIdSePhoneAuthRequest,
-    ) -> Result<BankIdSeStatus, IdkollenError> {
+    ) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/phone/auth", &req)
     }
 
     /// Start a BankID SE signing session.
-    pub fn sign(&self, req: BankIdSeSignRequest) -> Result<BankIdSeStatus, IdkollenError> {
+    pub fn sign(&self, req: BankIdSeSignRequest) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/sign", &req)
     }
 
@@ -196,7 +196,7 @@ impl BankIdSeBlockingEndpoint<'_> {
     pub fn phone_sign(
         &self,
         req: BankIdSePhoneSignRequest,
-    ) -> Result<BankIdSeStatus, IdkollenError> {
+    ) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/phone/sign", &req)
     }
 
@@ -204,7 +204,7 @@ impl BankIdSeBlockingEndpoint<'_> {
     pub fn verify(
         &self,
         req: BankIdSeVerifyRequest,
-    ) -> Result<BankIdSeVerifyResponse, IdkollenError> {
+    ) -> Result<BankIdSeVerifyResponse, IdentisureError> {
         self.0.post("/v3/bankid-se/verify", &req)
     }
 
@@ -212,17 +212,17 @@ impl BankIdSeBlockingEndpoint<'_> {
     pub fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/bankid-se/age-verification", &req)
     }
 
     /// Poll the current status of a BankID SE authentication session.
-    pub fn auth_status(&self, id: &str) -> Result<BankIdSeStatus, IdkollenError> {
+    pub fn auth_status(&self, id: &str) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.get(&format!("/v3/bankid-se/auth/{}", id))
     }
 
     /// Poll the current status of a BankID SE signing session.
-    pub fn sign_status(&self, id: &str) -> Result<BankIdSeStatus, IdkollenError> {
+    pub fn sign_status(&self, id: &str) -> Result<BankIdSeStatus, IdentisureError> {
         self.0.get(&format!("/v3/bankid-se/sign/{}", id))
     }
 
@@ -230,23 +230,23 @@ impl BankIdSeBlockingEndpoint<'_> {
     pub fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0
             .get(&format!("/v3/bankid-se/age-verification/{}", id))
     }
 
     /// Cancel a BankID SE authentication session.
-    pub fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/bankid-se/auth/{}", id))
     }
 
     /// Cancel a BankID SE signing session.
-    pub fn cancel_sign(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_sign(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/bankid-se/sign/{}", id))
     }
 
     /// Cancel a BankID SE age verification session.
-    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0
             .delete(&format!("/v3/bankid-se/age-verification/{}", id))
     }

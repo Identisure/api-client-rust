@@ -19,7 +19,7 @@ use crate::endpoints::{
 /// Errors returned by all client operations.
 #[non_exhaustive]
 #[derive(Debug, Error)]
-pub enum IdkollenError {
+pub enum IdentisureError {
     /// Network-level error (connection refused, TLS failure, etc.).
     #[error("HTTP error: {0}")]
     Http(
@@ -48,16 +48,16 @@ pub enum WaitError {
     Timeout,
     /// An underlying network or API error occurred during polling.
     #[error(transparent)]
-    Client(#[from] IdkollenError),
+    Client(#[from] IdentisureError),
 }
 
 /// Pre-configured API base URL selection.
 #[non_exhaustive]
 #[derive(Debug, Clone)]
 pub enum Environment {
-    /// `https://api.idkollen.se`
+    /// `https://api.identisure.com`
     Production,
-    /// `https://stgapi.idkollen.se`
+    /// `https://stgapi.identisure.com`
     Staging,
 }
 
@@ -66,8 +66,8 @@ impl Environment {
     #[must_use]
     fn base_url(&self) -> &'static str {
         match self {
-            Self::Production => "https://api.idkollen.se",
-            Self::Staging => "https://stgapi.idkollen.se",
+            Self::Production => "https://api.identisure.com",
+            Self::Staging => "https://stgapi.identisure.com",
         }
     }
 }
@@ -91,8 +91,8 @@ impl Default for PollOptions {
     }
 }
 
-/// Builder for constructing an [`IdkollenClient`] or [`IdkollenBlockingClient`].
-pub struct IdkollenClientBuilder {
+/// Builder for constructing an [`IdentisureClient`] or [`IdentisureBlockingClient`].
+pub struct IdentisureClientBuilder {
     environment: Environment,
     base_url: Option<String>,
     client_id: String,
@@ -105,7 +105,7 @@ pub struct IdkollenClientBuilder {
     blocking_http_client: Option<reqwest::blocking::Client>,
 }
 
-impl IdkollenClientBuilder {
+impl IdentisureClientBuilder {
     #[must_use]
     pub fn new(client_id: impl Into<String>, client_secret: impl Into<String>) -> Self {
         Self {
@@ -113,7 +113,7 @@ impl IdkollenClientBuilder {
             base_url: None,
             client_id: client_id.into(),
             client_secret: client_secret.into(),
-            user_agent: format!("idkollen-client-rs/{}", env!("CARGO_PKG_VERSION")),
+            user_agent: format!("identisure-client-rs/{}", env!("CARGO_PKG_VERSION")),
             timeout: Duration::from_secs(30),
             #[cfg(feature = "async")]
             http_client: None,
@@ -170,7 +170,7 @@ impl IdkollenClientBuilder {
     }
 
     #[cfg(feature = "async")]
-    pub fn build(self) -> Result<IdkollenClient, IdkollenError> {
+    pub fn build(self) -> Result<IdentisureClient, IdentisureError> {
         let base_url = self
             .base_url
             .unwrap_or_else(|| self.environment.base_url().to_owned());
@@ -179,7 +179,7 @@ impl IdkollenClientBuilder {
             .map(Ok)
             .unwrap_or_else(|| reqwest::Client::builder().build())?;
 
-        Ok(IdkollenClient {
+        Ok(IdentisureClient {
             http,
             base_url,
             client_id: self.client_id,
@@ -190,7 +190,7 @@ impl IdkollenClientBuilder {
     }
 
     #[cfg(feature = "blocking")]
-    pub fn build_blocking(self) -> Result<IdkollenBlockingClient, IdkollenError> {
+    pub fn build_blocking(self) -> Result<IdentisureBlockingClient, IdentisureError> {
         let base_url = self
             .base_url
             .unwrap_or_else(|| self.environment.base_url().to_owned());
@@ -199,7 +199,7 @@ impl IdkollenClientBuilder {
             .map(Ok)
             .unwrap_or_else(|| reqwest::blocking::Client::builder().build())?;
 
-        Ok(IdkollenBlockingClient {
+        Ok(IdentisureBlockingClient {
             http,
             base_url,
             client_id: self.client_id,
@@ -211,7 +211,7 @@ impl IdkollenClientBuilder {
 }
 
 #[cfg(feature = "async")]
-pub struct IdkollenClient {
+pub struct IdentisureClient {
     pub(crate) http: reqwest::Client,
     pub(crate) base_url: String,
     pub(crate) client_id: String,
@@ -221,7 +221,7 @@ pub struct IdkollenClient {
 }
 
 #[cfg(feature = "async")]
-impl IdkollenClient {
+impl IdentisureClient {
     #[inline]
     #[must_use]
     pub fn bankid_se(&self) -> BankIdSeEndpoint<'_> {
@@ -272,7 +272,7 @@ impl IdkollenClient {
             .timeout(self.timeout)
     }
 
-    pub(crate) async fn get<T: DeserializeOwned>(&self, path: &str) -> Result<T, IdkollenError> {
+    pub(crate) async fn get<T: DeserializeOwned>(&self, path: &str) -> Result<T, IdentisureError> {
         let resp = self.request(Method::GET, path).send().await?;
 
         parse_response(resp).await
@@ -282,13 +282,13 @@ impl IdkollenClient {
         &self,
         path: &str,
         body: &B,
-    ) -> Result<T, IdkollenError> {
+    ) -> Result<T, IdentisureError> {
         let resp = self.request(Method::POST, path).json(body).send().await?;
 
         parse_response(resp).await
     }
 
-    pub(crate) async fn delete(&self, path: &str) -> Result<(), IdkollenError> {
+    pub(crate) async fn delete(&self, path: &str) -> Result<(), IdentisureError> {
         let resp = self.request(Method::DELETE, path).send().await?;
 
         if resp.status().is_success() {
@@ -297,7 +297,7 @@ impl IdkollenClient {
             let status = resp.status().as_u16();
             let message = api_error_message(resp.text().await.unwrap_or_default());
 
-            Err(IdkollenError::Api { status, message })
+            Err(IdentisureError::Api { status, message })
         }
     }
 
@@ -305,7 +305,7 @@ impl IdkollenClient {
         &self,
         path: &str,
         form: reqwest::multipart::Form,
-    ) -> Result<T, IdkollenError> {
+    ) -> Result<T, IdentisureError> {
         let resp = self
             .request(Method::POST, path)
             .multipart(form)
@@ -315,7 +315,7 @@ impl IdkollenClient {
         parse_response(resp).await
     }
 
-    pub(crate) async fn get_bytes(&self, path: &str) -> Result<Vec<u8>, IdkollenError> {
+    pub(crate) async fn get_bytes(&self, path: &str) -> Result<Vec<u8>, IdentisureError> {
         let resp = self.request(Method::GET, path).send().await?;
 
         if resp.status().is_success() {
@@ -324,13 +324,15 @@ impl IdkollenClient {
             let status = resp.status().as_u16();
             let message = api_error_message(resp.text().await.unwrap_or_default());
 
-            Err(IdkollenError::Api { status, message })
+            Err(IdentisureError::Api { status, message })
         }
     }
 }
 
 #[cfg(feature = "async")]
-async fn parse_response<T: DeserializeOwned>(resp: reqwest::Response) -> Result<T, IdkollenError> {
+async fn parse_response<T: DeserializeOwned>(
+    resp: reqwest::Response,
+) -> Result<T, IdentisureError> {
     if resp.status().is_success() {
         let text = resp.text().await?;
         let deserializer = &mut serde_json::Deserializer::from_str(&text);
@@ -340,12 +342,12 @@ async fn parse_response<T: DeserializeOwned>(resp: reqwest::Response) -> Result<
         let status = resp.status().as_u16();
         let message = api_error_message(resp.text().await.unwrap_or_default());
 
-        Err(IdkollenError::Api { status, message })
+        Err(IdentisureError::Api { status, message })
     }
 }
 
 #[cfg(feature = "blocking")]
-pub struct IdkollenBlockingClient {
+pub struct IdentisureBlockingClient {
     pub(crate) http: reqwest::blocking::Client,
     pub(crate) base_url: String,
     pub(crate) client_id: String,
@@ -355,7 +357,7 @@ pub struct IdkollenBlockingClient {
 }
 
 #[cfg(feature = "blocking")]
-impl IdkollenBlockingClient {
+impl IdentisureBlockingClient {
     #[inline]
     #[must_use]
     pub fn bankid_se(&self) -> BankIdSeBlockingEndpoint<'_> {
@@ -406,7 +408,7 @@ impl IdkollenBlockingClient {
             .timeout(self.timeout)
     }
 
-    pub(crate) fn get<T: DeserializeOwned>(&self, path: &str) -> Result<T, IdkollenError> {
+    pub(crate) fn get<T: DeserializeOwned>(&self, path: &str) -> Result<T, IdentisureError> {
         let resp = self.request(Method::GET, path).send()?;
 
         parse_blocking_response(resp)
@@ -416,13 +418,13 @@ impl IdkollenBlockingClient {
         &self,
         path: &str,
         body: &B,
-    ) -> Result<T, IdkollenError> {
+    ) -> Result<T, IdentisureError> {
         let resp = self.request(Method::POST, path).json(body).send()?;
 
         parse_blocking_response(resp)
     }
 
-    pub(crate) fn delete(&self, path: &str) -> Result<(), IdkollenError> {
+    pub(crate) fn delete(&self, path: &str) -> Result<(), IdentisureError> {
         let resp = self.request(Method::DELETE, path).send()?;
 
         if resp.status().is_success() {
@@ -431,7 +433,7 @@ impl IdkollenBlockingClient {
             let status = resp.status().as_u16();
             let message = api_error_message(resp.text().unwrap_or_default());
 
-            Err(IdkollenError::Api { status, message })
+            Err(IdentisureError::Api { status, message })
         }
     }
 
@@ -439,13 +441,13 @@ impl IdkollenBlockingClient {
         &self,
         path: &str,
         form: reqwest::blocking::multipart::Form,
-    ) -> Result<T, IdkollenError> {
+    ) -> Result<T, IdentisureError> {
         let resp = self.request(Method::POST, path).multipart(form).send()?;
 
         parse_blocking_response(resp)
     }
 
-    pub(crate) fn get_bytes(&self, path: &str) -> Result<Vec<u8>, IdkollenError> {
+    pub(crate) fn get_bytes(&self, path: &str) -> Result<Vec<u8>, IdentisureError> {
         let resp = self.request(Method::GET, path).send()?;
 
         if resp.status().is_success() {
@@ -454,7 +456,7 @@ impl IdkollenBlockingClient {
             let status = resp.status().as_u16();
             let message = api_error_message(resp.text().unwrap_or_default());
 
-            Err(IdkollenError::Api { status, message })
+            Err(IdentisureError::Api { status, message })
         }
     }
 }
@@ -462,7 +464,7 @@ impl IdkollenBlockingClient {
 #[cfg(feature = "blocking")]
 fn parse_blocking_response<T: DeserializeOwned>(
     resp: reqwest::blocking::Response,
-) -> Result<T, IdkollenError> {
+) -> Result<T, IdentisureError> {
     if resp.status().is_success() {
         let text = resp.text()?;
         let deserializer = &mut serde_json::Deserializer::from_str(&text);
@@ -472,7 +474,7 @@ fn parse_blocking_response<T: DeserializeOwned>(
         let status = resp.status().as_u16();
         let message = api_error_message(resp.text().unwrap_or_default());
 
-        Err(IdkollenError::Api { status, message })
+        Err(IdentisureError::Api { status, message })
     }
 }
 
@@ -492,14 +494,14 @@ mod tests {
             thread::sleep(Duration::from_secs(2));
         });
 
-        let client = IdkollenClientBuilder::new("id", "secret")
+        let client = IdentisureClientBuilder::new("id", "secret")
             .base_url(format!("http://{addr}"))
             .timeout(Duration::from_millis(100))
             .build_blocking()
             .unwrap();
         let result = client.get::<serde_json::Value>("/v3/slow");
 
-        assert!(matches!(result, Err(IdkollenError::Http(e)) if e.is_timeout()));
+        assert!(matches!(result, Err(IdentisureError::Http(e)) if e.is_timeout()));
     }
 }
 

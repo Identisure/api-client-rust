@@ -1,4 +1,4 @@
-use crate::client::{IdkollenError, PollOptions, WaitError};
+use crate::client::{IdentisureError, PollOptions, WaitError};
 use crate::models::{AgeVerificationRequest, AgeVerificationStatus};
 use crate::models::{
     FrejaAuthRequest, FrejaBackchannelAuthRequest, FrejaBackchannelSignRequest, FrejaSignRequest,
@@ -7,16 +7,16 @@ use crate::models::{
 use std::time::Instant;
 
 #[cfg(feature = "async")]
-use crate::client::IdkollenClient;
+use crate::client::IdentisureClient;
 
 #[cfg(feature = "async")]
 /// Freja eID operations.
-pub struct FrejaEndpoint<'a>(pub(crate) &'a IdkollenClient);
+pub struct FrejaEndpoint<'a>(pub(crate) &'a IdentisureClient);
 
 #[cfg(feature = "async")]
 impl FrejaEndpoint<'_> {
     /// Start a Freja eID authentication session.
-    pub async fn auth(&self, req: FrejaAuthRequest) -> Result<FrejaStatus, IdkollenError> {
+    pub async fn auth(&self, req: FrejaAuthRequest) -> Result<FrejaStatus, IdentisureError> {
         self.0.post("/v3/freja/auth", &req).await
     }
 
@@ -24,12 +24,12 @@ impl FrejaEndpoint<'_> {
     pub async fn backchannel_auth(
         &self,
         req: FrejaBackchannelAuthRequest,
-    ) -> Result<FrejaStatus, IdkollenError> {
+    ) -> Result<FrejaStatus, IdentisureError> {
         self.0.post("/v3/freja/backchannel/auth", &req).await
     }
 
     /// Start a Freja eID signing session.
-    pub async fn sign(&self, req: FrejaSignRequest) -> Result<FrejaStatus, IdkollenError> {
+    pub async fn sign(&self, req: FrejaSignRequest) -> Result<FrejaStatus, IdentisureError> {
         self.0.post("/v3/freja/sign", &req).await
     }
 
@@ -37,7 +37,7 @@ impl FrejaEndpoint<'_> {
     pub async fn backchannel_sign(
         &self,
         req: FrejaBackchannelSignRequest,
-    ) -> Result<FrejaStatus, IdkollenError> {
+    ) -> Result<FrejaStatus, IdentisureError> {
         self.0.post("/v3/freja/backchannel/sign", &req).await
     }
 
@@ -45,17 +45,17 @@ impl FrejaEndpoint<'_> {
     pub async fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/freja/age-verification", &req).await
     }
 
     /// Poll the current status of a Freja eID authentication session.
-    pub async fn auth_status(&self, id: &str) -> Result<FrejaStatus, IdkollenError> {
+    pub async fn auth_status(&self, id: &str) -> Result<FrejaStatus, IdentisureError> {
         self.0.get(&format!("/v3/freja/auth/{}", id)).await
     }
 
     /// Poll the current status of a Freja eID signing session.
-    pub async fn sign_status(&self, id: &str) -> Result<FrejaStatus, IdkollenError> {
+    pub async fn sign_status(&self, id: &str) -> Result<FrejaStatus, IdentisureError> {
         self.0.get(&format!("/v3/freja/sign/{}", id)).await
     }
 
@@ -63,24 +63,24 @@ impl FrejaEndpoint<'_> {
     pub async fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0
             .get(&format!("/v3/freja/age-verification/{}", id))
             .await
     }
 
     /// Cancel a Freja eID authentication session.
-    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/freja/auth/{}", id)).await
     }
 
     /// Cancel a Freja eID signing session.
-    pub async fn cancel_sign(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_sign(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/freja/sign/{}", id)).await
     }
 
     /// Cancel a Freja eID age verification session.
-    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0
             .delete(&format!("/v3/freja/age-verification/{}", id))
             .await
@@ -160,16 +160,16 @@ impl FrejaEndpoint<'_> {
 }
 
 #[cfg(feature = "blocking")]
-use crate::client::IdkollenBlockingClient;
+use crate::client::IdentisureBlockingClient;
 
 #[cfg(feature = "blocking")]
 /// Freja eID operations (blocking).
-pub struct FrejaBlockingEndpoint<'a>(pub(crate) &'a IdkollenBlockingClient);
+pub struct FrejaBlockingEndpoint<'a>(pub(crate) &'a IdentisureBlockingClient);
 
 #[cfg(feature = "blocking")]
 impl FrejaBlockingEndpoint<'_> {
     /// Start a Freja eID authentication session.
-    pub fn auth(&self, req: FrejaAuthRequest) -> Result<FrejaStatus, IdkollenError> {
+    pub fn auth(&self, req: FrejaAuthRequest) -> Result<FrejaStatus, IdentisureError> {
         self.0.post("/v3/freja/auth", &req)
     }
 
@@ -177,12 +177,12 @@ impl FrejaBlockingEndpoint<'_> {
     pub fn backchannel_auth(
         &self,
         req: FrejaBackchannelAuthRequest,
-    ) -> Result<FrejaStatus, IdkollenError> {
+    ) -> Result<FrejaStatus, IdentisureError> {
         self.0.post("/v3/freja/backchannel/auth", &req)
     }
 
     /// Start a Freja eID signing session.
-    pub fn sign(&self, req: FrejaSignRequest) -> Result<FrejaStatus, IdkollenError> {
+    pub fn sign(&self, req: FrejaSignRequest) -> Result<FrejaStatus, IdentisureError> {
         self.0.post("/v3/freja/sign", &req)
     }
 
@@ -190,7 +190,7 @@ impl FrejaBlockingEndpoint<'_> {
     pub fn backchannel_sign(
         &self,
         req: FrejaBackchannelSignRequest,
-    ) -> Result<FrejaStatus, IdkollenError> {
+    ) -> Result<FrejaStatus, IdentisureError> {
         self.0.post("/v3/freja/backchannel/sign", &req)
     }
 
@@ -198,17 +198,17 @@ impl FrejaBlockingEndpoint<'_> {
     pub fn age_verification(
         &self,
         req: AgeVerificationRequest,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.post("/v3/freja/age-verification", &req)
     }
 
     /// Poll the current status of a Freja eID authentication session.
-    pub fn auth_status(&self, id: &str) -> Result<FrejaStatus, IdkollenError> {
+    pub fn auth_status(&self, id: &str) -> Result<FrejaStatus, IdentisureError> {
         self.0.get(&format!("/v3/freja/auth/{}", id))
     }
 
     /// Poll the current status of a Freja eID signing session.
-    pub fn sign_status(&self, id: &str) -> Result<FrejaStatus, IdkollenError> {
+    pub fn sign_status(&self, id: &str) -> Result<FrejaStatus, IdentisureError> {
         self.0.get(&format!("/v3/freja/sign/{}", id))
     }
 
@@ -216,22 +216,22 @@ impl FrejaBlockingEndpoint<'_> {
     pub fn age_verification_status(
         &self,
         id: &str,
-    ) -> Result<AgeVerificationStatus, IdkollenError> {
+    ) -> Result<AgeVerificationStatus, IdentisureError> {
         self.0.get(&format!("/v3/freja/age-verification/{}", id))
     }
 
     /// Cancel a Freja eID authentication session.
-    pub fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/freja/auth/{}", id))
     }
 
     /// Cancel a Freja eID signing session.
-    pub fn cancel_sign(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_sign(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/freja/sign/{}", id))
     }
 
     /// Cancel a Freja eID age verification session.
-    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_age_verification(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/freja/age-verification/{}", id))
     }
 

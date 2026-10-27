@@ -1,12 +1,12 @@
 [package]
-name = "idkollen-client"
+name = "identisure-client"
 version = "0.1.0"
 edition = "2024"
-description = "API client for the IDkollen REST API"
+description = "API client for the Identisure REST API"
 license = "MIT"
 readme = "README.md"
-homepage = "https://developers.idkollen.se"
-documentation = "https://docs.rs/idkollen-client"
+homepage = "https://developers.identisure.com"
+documentation = "https://docs.rs/identisure-client"
 keywords = ["bankid", "eid", "identity", "authentication"]
 categories = ["authentication", "web-programming::http-client", "api-bindings"]
 rust-version = "1.87"

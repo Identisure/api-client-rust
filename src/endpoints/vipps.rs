@@ -1,18 +1,18 @@
-use crate::client::{IdkollenError, PollOptions, WaitError};
+use crate::client::{IdentisureError, PollOptions, WaitError};
 use crate::models::{VippsAuthRequest, VippsBackchannelAuthRequest, VippsStatus};
 use std::time::Instant;
 
 #[cfg(feature = "async")]
-use crate::client::IdkollenClient;
+use crate::client::IdentisureClient;
 
 #[cfg(feature = "async")]
 /// Vipps operations.
-pub struct VippsEndpoint<'a>(pub(crate) &'a IdkollenClient);
+pub struct VippsEndpoint<'a>(pub(crate) &'a IdentisureClient);
 
 #[cfg(feature = "async")]
 impl VippsEndpoint<'_> {
     /// Start a Vipps authentication session.
-    pub async fn auth(&self, req: VippsAuthRequest) -> Result<VippsStatus, IdkollenError> {
+    pub async fn auth(&self, req: VippsAuthRequest) -> Result<VippsStatus, IdentisureError> {
         self.0.post("/v3/vipps/auth", &req).await
     }
 
@@ -20,17 +20,17 @@ impl VippsEndpoint<'_> {
     pub async fn backchannel_auth(
         &self,
         req: VippsBackchannelAuthRequest,
-    ) -> Result<VippsStatus, IdkollenError> {
+    ) -> Result<VippsStatus, IdentisureError> {
         self.0.post("/v3/vipps/backchannel/auth", &req).await
     }
 
     /// Poll the current status of a Vipps authentication session.
-    pub async fn auth_status(&self, id: &str) -> Result<VippsStatus, IdkollenError> {
+    pub async fn auth_status(&self, id: &str) -> Result<VippsStatus, IdentisureError> {
         self.0.get(&format!("/v3/vipps/auth/{}", id)).await
     }
 
     /// Cancel a Vipps authentication session.
-    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub async fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/vipps/auth/{}", id)).await
     }
 
@@ -60,16 +60,16 @@ impl VippsEndpoint<'_> {
 }
 
 #[cfg(feature = "blocking")]
-use crate::client::IdkollenBlockingClient;
+use crate::client::IdentisureBlockingClient;
 
 #[cfg(feature = "blocking")]
 /// Vipps operations (blocking).
-pub struct VippsBlockingEndpoint<'a>(pub(crate) &'a IdkollenBlockingClient);
+pub struct VippsBlockingEndpoint<'a>(pub(crate) &'a IdentisureBlockingClient);
 
 #[cfg(feature = "blocking")]
 impl VippsBlockingEndpoint<'_> {
     /// Start a Vipps authentication session.
-    pub fn auth(&self, req: VippsAuthRequest) -> Result<VippsStatus, IdkollenError> {
+    pub fn auth(&self, req: VippsAuthRequest) -> Result<VippsStatus, IdentisureError> {
         self.0.post("/v3/vipps/auth", &req)
     }
 
@@ -77,17 +77,17 @@ impl VippsBlockingEndpoint<'_> {
     pub fn backchannel_auth(
         &self,
         req: VippsBackchannelAuthRequest,
-    ) -> Result<VippsStatus, IdkollenError> {
+    ) -> Result<VippsStatus, IdentisureError> {
         self.0.post("/v3/vipps/backchannel/auth", &req)
     }
 
     /// Poll the current status of a Vipps authentication session.
-    pub fn auth_status(&self, id: &str) -> Result<VippsStatus, IdkollenError> {
+    pub fn auth_status(&self, id: &str) -> Result<VippsStatus, IdentisureError> {
         self.0.get(&format!("/v3/vipps/auth/{}", id))
     }
 
     /// Cancel a Vipps authentication session.
-    pub fn cancel_auth(&self, id: &str) -> Result<(), IdkollenError> {
+    pub fn cancel_auth(&self, id: &str) -> Result<(), IdentisureError> {
         self.0.delete(&format!("/v3/vipps/auth/{}", id))
     }
 

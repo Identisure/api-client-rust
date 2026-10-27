@@ -1,4 +1,4 @@
-<img align="left" height="100" style="margin-right: 10px;" src="../img/icon.png">
+<img align="left" height="100" style="margin-right: 10px;" src="./img/icon.png">
 
 # Identisure Rust Client
 
@@ -74,6 +74,16 @@ let valid = identisure_client::verify_callback_signature(&raw_body, signature_he
 
 * [Rust Stable 1.87+](https://rust-lang.org/tools/install/)
 * [Cargo](https://doc.rust-lang.org/cargo/getting-started/installation.html)
+
+#### Clone
+
+The test fixtures live in a git submodule. Clone with:
+
+```sh
+$ git clone --recurse-submodules https://github.com/identisure/api-client-rust.git
+```
+
+Or, in an existing clone, run `git submodule update --init`.
 
 #### Build
 

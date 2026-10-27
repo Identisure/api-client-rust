@@ -6,6 +6,7 @@ description = "API client for the Identisure REST API"
 license = "MIT"
 readme = "README.md"
 homepage = "https://developers.identisure.com"
+repository = "https://github.com/identisure/api-client-rust"
 documentation = "https://docs.rs/identisure-client"
 keywords = ["bankid", "eid", "identity", "authentication"]
 categories = ["authentication", "web-programming::http-client", "api-bindings"]

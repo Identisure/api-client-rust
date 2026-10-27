@@ -55,9 +55,9 @@ pub enum WaitError {
 #[non_exhaustive]
 #[derive(Debug, Clone)]
 pub enum Environment {
-    /// `https://api.identisure.com`
+    /// `https://api.idkollen.se`
     Production,
-    /// `https://stgapi.identisure.com`
+    /// `https://stgapi.idkollen.se`
     Staging,
 }
 
@@ -66,8 +66,8 @@ impl Environment {
     #[must_use]
     fn base_url(&self) -> &'static str {
         match self {
-            Self::Production => "https://api.identisure.com",
-            Self::Staging => "https://stgapi.identisure.com",
+            Self::Production => "https://api.idkollen.se",
+            Self::Staging => "https://stgapi.idkollen.se",
         }
     }
 }

@@ -11,6 +11,7 @@ documentation = "https://docs.rs/identisure-client"
 keywords = ["bankid", "eid", "identity", "authentication"]
 categories = ["authentication", "web-programming::http-client", "api-bindings"]
 rust-version = "1.87"
+include = ["/src", "/LICENSE", "/README.md"]
 
 [features]
 default = ["async"]

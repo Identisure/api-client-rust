@@ -11,12 +11,14 @@
 [crate-url]: https://crates.io/crates/identisure-client
 [downloads-image]: https://img.shields.io/crates/d/identisure-client?style=flat-square
 [downloads-url]: https://crates.io/crates/identisure-client
-[docs-image]: https://img.shields.io/docsrs/identisure-client?style=flat-square
-[docs-url]: https://docs.rs/identisure-client
+[docs-image]: https://img.shields.io/badge/github-docs-orange?logo=github&style=flat-square
+[docs-url]: https://identisure.github.io/api-client-rust
 [license-image]: https://img.shields.io/badge/license-MIT-blue?style=flat-square
 [license-url]: https://opensource.org/license/mit
 
 API client for the [Identisure](https://developers.identisure.com) REST API.
+
+Documentation: [identisure.github.io/api-client-rust](https://identisure.github.io/api-client-rust)
 
 ## Requirements
 

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["BankIdNoBlockingEndpoint","BankIdNoEndpoint","BankIdSeBlockingEndpoint","BankIdSeEndpoint","DocumentBlockingEndpoint","DocumentEndpoint","FrejaBlockingEndpoint","FrejaEndpoint","FtnBlockingEndpoint","FtnEndpoint","MitIdBlockingEndpoint","MitIdEndpoint","VippsBlockingEndpoint","VippsEndpoint"]};

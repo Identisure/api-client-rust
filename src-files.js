@@ -1,0 +1,2 @@
+createSrcSidebar('[["identisure_client",["",[["endpoints",[],["bankid_no.rs","bankid_se.rs","document.rs","freja.rs","ftn.rs","mitid.rs","mod.rs","vipps.rs"]],["models",[],["age_verification.rs","bankid_no.rs","bankid_se.rs","common.rs","document.rs","email.rs","freja.rs","ftn.rs","ip_address.rs","mitid.rs","mod.rs","org_number.rs","ssn.rs","url.rs","vipps.rs"]]],["callback.rs","client.rs","lib.rs"]]]]');
+//{"start":19,"fragment_lengths":[385]}

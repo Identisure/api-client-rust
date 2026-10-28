@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Environment","IdentisureError","WaitError"],"fn":["verify_callback_signature"],"mod":["endpoints","models"],"struct":["IdentisureBlockingClient","IdentisureClient","IdentisureClientBuilder","PollOptions"]};
